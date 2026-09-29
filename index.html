@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nihongo Master N5 - Học Tiếng Nhật 1-25</title>
+  <title>Nihongo Master N5 - Học Tiếng Nhật & PDF Converter</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- PDF.js CDN cho chuyển đổi PDF sang JSON -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
     body {
@@ -35,29 +40,42 @@
 
       <!-- Main Navigation Tabs -->
       <nav class="hidden md:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl">
-        <button onclick="switchTab('vocab')" id="tab-vocab" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+        <button onclick="switchTab('vocab')" id="tab-vocab" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">
           <i data-lucide="book-open" class="w-4 h-4 inline mr-1"></i>Từ Vựng
         </button>
-        <button onclick="switchTab('grammar')" id="tab-grammar" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+        <button onclick="switchTab('grammar')" id="tab-grammar" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">
           <i data-lucide="file-text" class="w-4 h-4 inline mr-1"></i>Ngữ Pháp
         </button>
-        <button onclick="switchTab('cloze')" id="tab-cloze" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+        <button onclick="switchTab('cloze')" id="tab-cloze" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">
           <i data-lucide="pen-tool" class="w-4 h-4 inline mr-1"></i>Đục Lỗ
         </button>
-        <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+        <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">
           <i data-lucide="brain-circuit" class="w-4 h-4 inline mr-1"></i>Luyện Quiz
         </button>
-        <button onclick="switchTab('data')" id="tab-data" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+        <button onclick="switchTab('pdf')" id="tab-pdf" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all text-indigo-600">
+          <i data-lucide="file-up" class="w-4 h-4 inline mr-1"></i>PDF sang JSON
+        </button>
+        <button onclick="switchTab('data')" id="tab-data" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">
           <i data-lucide="database" class="w-4 h-4 inline mr-1"></i>Quản Lý Data
         </button>
       </nav>
 
-      <!-- Lesson Selector -->
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">Bài:</span>
-        <select id="lessonSelect" onchange="changeLesson()" class="bg-rose-50 border border-rose-200 text-rose-900 font-bold rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400">
-          <!-- JS dynamic options -->
-        </select>
+      <!-- Lesson Selector & Auth Area -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">Bài:</span>
+          <select id="lessonSelect" onchange="changeLesson()" class="bg-rose-50 border border-rose-200 text-rose-900 font-bold rounded-lg px-2.5 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400">
+            <!-- JS dynamic options -->
+          </select>
+        </div>
+
+        <!-- Auth Button -->
+        <div id="authNavArea">
+          <button onclick="openAuthModal()" class="bg-rose-500 hover:bg-rose-600 text-white font-semibold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 shadow-sm transition">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+            <span id="authBtnText">Đăng Nhập</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -74,6 +92,9 @@
       </button>
       <button onclick="switchTab('quiz')" id="mob-tab-quiz" class="text-xs flex flex-col items-center gap-1 font-medium text-slate-600">
         <i data-lucide="brain-circuit" class="w-5 h-5"></i>Quiz
+      </button>
+      <button onclick="switchTab('pdf')" id="mob-tab-pdf" class="text-xs flex flex-col items-center gap-1 font-medium text-indigo-600">
+        <i data-lucide="file-up" class="w-5 h-5"></i>PDF
       </button>
       <button onclick="switchTab('data')" id="mob-tab-data" class="text-xs flex flex-col items-center gap-1 font-medium text-slate-600">
         <i data-lucide="database" class="w-5 h-5"></i>Data
@@ -188,7 +209,40 @@
       </div>
     </section>
 
-    <!-- TAB 5: DATA MANAGEMENT -->
+    <!-- TAB 5: PDF TO JSON CONVERTER -->
+    <section id="view-pdf" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 max-w-3xl mx-auto">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-indigo-600">
+          <i data-lucide="file-up"></i> Chuyển Đổi PDF Sang Dữ Liệu JSON
+        </h3>
+        <p class="text-sm text-slate-500 mb-6">Tải lên file tài liệu PDF để trích xuất nội dung văn bản thành cấu trúc dữ liệu JSON dùng cho ứng dụng.</p>
+
+        <div class="border-2 border-dashed border-indigo-200 rounded-2xl p-8 text-center bg-indigo-50/40 hover:bg-indigo-50 transition cursor-pointer" onclick="document.getElementById('pdfFileInput').click()">
+          <i data-lucide="file-text" class="w-12 h-12 text-indigo-400 mx-auto mb-3"></i>
+          <p class="font-semibold text-slate-700">Nhấp để chọn file PDF hoặc kéo thả vào đây</p>
+          <p id="pdfFileName" class="text-sm text-indigo-600 font-semibold mt-2"></p>
+          <input type="file" id="pdfFileInput" accept="application/pdf" class="hidden" onchange="handlePdfSelect(event)">
+        </div>
+
+        <button id="convertPdfBtn" onclick="convertPdfToJson()" disabled class="mt-4 w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2">
+          <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+          <span>Chuyển Đổi Sang JSON</span>
+        </button>
+
+        <div id="pdfResultBox" class="mt-6 hidden">
+          <div class="flex justify-between items-center mb-3">
+            <h4 class="font-bold text-slate-800">Kết quả JSON:</h4>
+            <div class="flex gap-2">
+              <button onclick="copyPdfJson()" class="px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 rounded-lg transition">📋 Sao chép</button>
+              <button onclick="downloadPdfJson()" class="px-3 py-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition">💾 Tải về file JSON</button>
+            </div>
+          </div>
+          <pre id="pdfJsonOutput" class="bg-slate-900 text-green-400 p-4 rounded-xl text-xs font-mono max-h-80 overflow-y-auto"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: DATA MANAGEMENT -->
     <section id="view-data" class="tab-content hidden space-y-6">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
@@ -206,6 +260,63 @@
     </section>
 
   </main>
+
+  <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
+  <div id="authModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md relative">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- User Information if logged in -->
+      <div id="userProfileView" class="hidden text-center py-4 space-y-4">
+        <div class="w-16 h-16 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto">
+          <i data-lucide="user-check" class="w-8 h-8"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold" id="loggedUserName">Tên người dùng</h3>
+          <p class="text-xs text-slate-400">Đã đăng nhập trên thiết bị này</p>
+        </div>
+        <button onclick="handleLogout()" class="w-full bg-rose-500 text-white font-semibold py-2 rounded-xl text-sm hover:bg-rose-600 transition">Đăng Xuất</button>
+      </div>
+
+      <!-- Login / Register Form -->
+      <div id="userAuthForms">
+        <div class="flex border-b mb-6">
+          <button id="modalTabLogin" onclick="switchAuthForm('login')" class="flex-1 py-2 font-bold text-rose-500 border-b-2 border-rose-500">Đăng Nhập</button>
+          <button id="modalTabReg" onclick="switchAuthForm('reg')" class="flex-1 py-2 font-bold text-slate-400 hover:text-rose-500">Đăng Ký</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="modalLoginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Tài khoản</label>
+            <input type="text" id="loginUser" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Mật khẩu</label>
+            <input type="password" id="loginPass" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400">
+          </div>
+          <button type="submit" class="w-full bg-rose-500 text-white font-bold py-2.5 rounded-xl shadow-md shadow-rose-200 hover:bg-rose-600 transition">Đăng Nhập</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="modalRegForm" onsubmit="handleRegSubmit(event)" class="space-y-4 hidden">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Tài khoản</label>
+            <input type="text" id="regUser" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Mật khẩu</label>
+            <input type="password" id="regPass" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400">
+          </div>
+          <button type="submit" class="w-full bg-rose-500 text-white font-bold py-2.5 rounded-xl shadow-md shadow-rose-200 hover:bg-rose-600 transition">Tạo Tài Khoản</button>
+        </form>
+
+        <p id="authAlert" class="mt-4 text-xs font-bold text-center"></p>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-100 py-6 mt-12 text-center text-xs text-slate-400">
@@ -226,7 +337,7 @@
           { word: "がくせい", kanji: "学生", romaji: "gakusei", meaning: "Học sinh / Sinh viên", example: "ナムさんは がくせいです。" },
           { word: "かいしゃいん", kanji: "会社員", romaji: "kaishain", meaning: "Nhân viên công ty", example: "マイクさんは かいしゃいんです。" },
           { word: "ぎんこういん", kanji: "銀行員", romaji: "ginkouin", meaning: "Nhân viên ngân hàng", example: "あのひとは ぎんこういんです。" },
-          { word: "いしゃ", "kanji": "医者", romaji: "isha", meaning: "Bác sĩ", example: "父は いしゃです。" }
+          { word: "いしゃ", kanji: "医者", romaji: "isha", meaning: "Bác sĩ", example: "父は いしゃです。" }
         ],
         grammar: [
           { title: "1. N1 は N2 です (N1 là N2)", detail: "Dùng để giới thiệu tên, nghề nghiệp, quốc tịch.\n- 例: わたしは がくせいです。(Tôi là học sinh)." },
@@ -250,7 +361,7 @@
           { word: "かさ", kanji: "傘", romaji: "kasa", meaning: "Dù / Ô", example: "あれは わたしのかさです。" }
         ],
         grammar: [
-          { title: "1. これ / それ / あれ は N です", title: "Chỉ định từ làm chủ ngữ cho đồ vật dựa theo vị trí khoảng cách." },
+          { title: "1. これ / それ / あれ は N です", detail: "Chỉ định từ làm chủ ngữ cho đồ vật dựa theo vị trí khoảng cách." },
           { title: "2. この N / その N / あの N", detail: "Chỉ định từ đi kèm danh từ trực tiếp.\n- 例: このほんは わたしのです (Sách này là của tôi)." }
         ],
         cloze: [
@@ -315,7 +426,7 @@
         ]
       },
       7: {
-        title: "Bài 7: Công cụ ( Trợ từ で) & Cho / Nhận",
+        title: "Bài 7: Công cụ (Trợ từ で) & Cho / Nhận",
         vocabulary: [
           { word: "きります", kanji: "切ります", romaji: "kirimasu", meaning: "Cắt", example: "はさみで きります。" },
           { word: "あげます", kanji: "あげます", romaji: "agemasu", meaning: "Cho / Tặng", example: "友達に あげます。" }
@@ -400,7 +511,7 @@
           { title: "1. V-bỏ-ます + たいです", detail: "Muốn thực hiện hành động." }
         ],
         cloze: [
-          { text: "みずを のみ [hole] です。", answer: "たい", "hint": "Đuôi thể hiện mong muốn" }
+          { text: "みずを のみ [hole] です。", answer: "たい", hint: "Đuôi thể hiện mong muốn" }
         ]
       },
       14: {
@@ -555,6 +666,7 @@
     let quizQuestions = [];
     let currentQuizIndex = 0;
     let score = 0;
+    let selectedPdfFile = null;
 
     // Initialize App
     window.addEventListener('DOMContentLoaded', () => {
@@ -563,6 +675,7 @@
       loadHighScore();
       renderCurrentLesson();
       switchTab('vocab');
+      updateAuthUI();
     });
 
     // Populate dropdown with 25 lessons
@@ -586,7 +699,8 @@
     function switchTab(tabId) {
       currentTab = tabId;
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById(`view-${tabId}`).classList.remove('hidden');
+      const activeContent = document.getElementById(`view-${tabId}`);
+      if(activeContent) activeContent.classList.remove('hidden');
 
       // Update button styling
       document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -710,102 +824,273 @@
     // Quiz Mode Logic
     function startQuiz() {
       const lesson = lessonsData[currentLesson];
-      if(!lesson || (lesson.vocabulary.length === 0 && lesson.cloze.length === 0)) {
+      if(!lesson || (!lesson.vocabulary.length && !lesson.cloze.length)) {
         alert("Bài này chưa có đủ dữ liệu để tạo Quiz!");
         return;
       }
 
-      // Generate Questions from Vocab
       quizQuestions = [];
+      score = 0;
+      currentQuizIndex = 0;
+
+      // Gen questions from vocab
       lesson.vocabulary.forEach(v => {
         quizQuestions.push({
-          q: `Từ "${v.word}" (${v.kanji || ''}) có nghĩa là gì?`,
-          a: v.meaning,
-          options: shuffleArray([v.meaning, "Sách", "Bác sĩ", "Học sinh", "Trường học"].slice(0,4))
+          question: `Từ "${v.word}" (${v.kanji || ''}) có nghĩa là gì?`,
+          answer: v.meaning,
+          options: shuffleArray([
+            v.meaning,
+            "Xin chào",
+            "Cảm ơn",
+            "Tạm biệt"
+          ])
         });
       });
 
       quizQuestions = shuffleArray(quizQuestions).slice(0, 5);
-      currentQuizIndex = 0;
-      score = 0;
 
       document.getElementById('quizStartScreen').classList.add('hidden');
       document.getElementById('quizResultScreen').classList.add('hidden');
       document.getElementById('quizContainer').classList.remove('hidden');
 
-      showQuizQuestion();
+      renderQuizQuestion();
     }
 
-    function showQuizQuestion() {
-      if(currentQuizIndex >= quizQuestions.length) {
-        endQuiz();
+    function renderQuizQuestion() {
+      if (currentQuizIndex >= quizQuestions.length) {
+        showQuizResult();
         return;
       }
 
       const q = quizQuestions[currentQuizIndex];
       document.getElementById('quizProgress').textContent = `Câu ${currentQuizIndex + 1}/${quizQuestions.length}`;
       document.getElementById('quizScore').textContent = `Điểm: ${score}`;
-      document.getElementById('quizQuestion').textContent = q.q;
+      document.getElementById('quizQuestion').textContent = q.question;
 
       const optsBox = document.getElementById('quizOptions');
       optsBox.innerHTML = '';
 
       q.options.forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:border-rose-400 hover:bg-rose-50/50 font-medium text-slate-700 transition";
+        btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-rose-400 hover:bg-rose-50/50 font-medium text-slate-700 transition";
         btn.textContent = opt;
-        btn.onclick = () => handleQuizAnswer(opt, q.a);
+        btn.onclick = () => handleQuizAnswer(opt, q.answer);
         optsBox.appendChild(btn);
       });
     }
 
     function handleQuizAnswer(selected, correct) {
-      if(selected === correct) {
+      if (selected === correct) {
         score += 20;
       }
       currentQuizIndex++;
-      showQuizQuestion();
+      renderQuizQuestion();
     }
 
-    function endQuiz() {
+    function showQuizResult() {
       document.getElementById('quizContainer').classList.add('hidden');
       document.getElementById('quizResultScreen').classList.remove('hidden');
       document.getElementById('finalScoreText').textContent = `Bạn đạt được: ${score} điểm`;
 
-      saveHighScore(score);
-    }
-
-    function saveHighScore(newScore) {
-      const currentHigh = localStorage.getItem(`highScore_N5_L${currentLesson}`) || 0;
-      if(newScore > parseInt(currentHigh)) {
-        localStorage.setItem(`highScore_N5_L${currentLesson}`, newScore);
+      const best = localStorage.getItem(`highScore_lesson_${currentLesson}`) || 0;
+      if (score > best) {
+        localStorage.setItem(`highScore_lesson_${currentLesson}`, score);
+        loadHighScore();
       }
-      loadHighScore();
     }
 
     function loadHighScore() {
-      const high = localStorage.getItem(`highScore_N5_L${currentLesson}`) || 0;
-      document.getElementById('highScoreText').textContent = `${high} điểm`;
+      const best = localStorage.getItem(`highScore_lesson_${currentLesson}`) || 0;
+      document.getElementById('highScoreText').textContent = `${best} điểm`;
     }
 
     function shuffleArray(arr) {
       return arr.sort(() => Math.random() - 0.5);
     }
 
-    // Handle JSON Data Upload
-    function handleFileUpload(event) {
-      const file = event.target.files[0];
-      if(!file) return;
+    // PDF TO JSON LOGIC
+    function handlePdfSelect(e) {
+      const file = e.target.files[0];
+      if (file && file.type === "application/pdf") {
+        selectedPdfFile = file;
+        document.getElementById('pdfFileName').textContent = `Đã chọn: ${file.name}`;
+        document.getElementById('convertPdfBtn').disabled = false;
+      } else {
+        alert("Vui lòng chọn file định dạng PDF!");
+      }
+    }
+
+    async function convertPdfToJson() {
+      if (!selectedPdfFile) return;
+
+      const btn = document.getElementById('convertPdfBtn');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> Đang xử lý PDF...`;
+      lucide.createIcons();
+
+      try {
+        const arrayBuffer = await selectedPdfFile.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+        let pdfData = {
+          metadata: {
+            fileName: selectedPdfFile.name,
+            fileSize: selectedPdfFile.size,
+            totalPages: pdf.numPages
+          },
+          pages: []
+        };
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(" ");
+
+          pdfData.pages.push({
+            pageNumber: i,
+            textContent: pageText
+          });
+        }
+
+        document.getElementById('pdfJsonOutput').textContent = JSON.stringify(pdfData, null, 2);
+        document.getElementById('pdfResultBox').classList.remove('hidden');
+
+      } catch (err) {
+        alert("Có lỗi khi đọc file PDF: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="refresh-cw" class="w-5 h-5"></i><span>Chuyển Đổi Sang JSON</span>`;
+        lucide.createIcons();
+      }
+    }
+
+    function copyPdfJson() {
+      const jsonText = document.getElementById('pdfJsonOutput').textContent;
+      navigator.clipboard.writeText(jsonText).then(() => {
+        alert("Đã sao chép JSON vào bộ nhớ tạm!");
+      });
+    }
+
+    function downloadPdfJson() {
+      const jsonText = document.getElementById('pdfJsonOutput').textContent;
+      const blob = new Blob([jsonText], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${selectedPdfFile ? selectedPdfFile.name.replace('.pdf', '') : 'converted'}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // AUTH / LOGIN LOGIC
+    function openAuthModal() {
+      document.getElementById('authModal').classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.add('hidden');
+    }
+
+    function switchAuthForm(type) {
+      const loginForm = document.getElementById('modalLoginForm');
+      const regForm = document.getElementById('modalRegForm');
+      const tabLogin = document.getElementById('modalTabLogin');
+      const tabReg = document.getElementById('modalTabReg');
+      document.getElementById('authAlert').textContent = '';
+
+      if (type === 'login') {
+        loginForm.classList.remove('hidden');
+        regForm.classList.add('hidden');
+        tabLogin.className = "flex-1 py-2 font-bold text-rose-500 border-b-2 border-rose-500";
+        tabReg.className = "flex-1 py-2 font-bold text-slate-400 hover:text-rose-500";
+      } else {
+        loginForm.classList.add('hidden');
+        regForm.classList.remove('hidden');
+        tabReg.className = "flex-1 py-2 font-bold text-rose-500 border-b-2 border-rose-500";
+        tabLogin.className = "flex-1 py-2 font-bold text-slate-400 hover:text-rose-500";
+      }
+    }
+
+    function handleRegSubmit(e) {
+      e.preventDefault();
+      const user = document.getElementById('regUser').value.trim();
+      const pass = document.getElementById('regPass').value;
+      const alertBox = document.getElementById('authAlert');
+
+      let users = JSON.parse(localStorage.getItem('app_users') || '{}');
+      if (users[user]) {
+        alertBox.className = "mt-4 text-xs font-bold text-center text-rose-500";
+        alertBox.textContent = "Tài khoản này đã tồn tại!";
+        return;
+      }
+
+      users[user] = pass;
+      localStorage.setItem('app_users', JSON.stringify(users));
+      alertBox.className = "mt-4 text-xs font-bold text-center text-emerald-600";
+      alertBox.textContent = "Đăng ký thành công! Hãy đăng nhập.";
+      switchAuthForm('login');
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value;
+      const alertBox = document.getElementById('authAlert');
+
+      let users = JSON.parse(localStorage.getItem('app_users') || '{}');
+
+      if (users[user] && users[user] === pass) {
+        localStorage.setItem('logged_user', user);
+        updateAuthUI();
+        closeAuthModal();
+      } else {
+        alertBox.className = "mt-4 text-xs font-bold text-center text-rose-500";
+        alertBox.textContent = "Tên đăng nhập hoặc mật khẩu không đúng!";
+      }
+    }
+
+    function updateAuthUI() {
+      const loggedUser = localStorage.getItem('logged_user');
+      const authBtnText = document.getElementById('authBtnText');
+      const profileView = document.getElementById('userProfileView');
+      const authForms = document.getElementById('userAuthForms');
+
+      if (loggedUser) {
+        authBtnText.textContent = loggedUser;
+        profileView.classList.remove('hidden');
+        authForms.classList.add('hidden');
+        document.getElementById('loggedUserName').textContent = loggedUser;
+      } else {
+        authBtnText.textContent = "Đăng Nhập";
+        profileView.classList.add('hidden');
+        authForms.classList.remove('hidden');
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('logged_user');
+      updateAuthUI();
+      closeAuthModal();
+    }
+
+    // Custom JSON/CSV Upload Logic
+    function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function(evt) {
         try {
-          const data = JSON.parse(e.target.result);
-          Object.assign(lessonsData, data);
-          alert("Cập nhật dữ liệu thành công!");
-          renderCurrentLesson();
+          const data = JSON.parse(evt.target.result);
+          if (data.vocabulary || data.grammar) {
+            lessonsData[currentLesson] = { ...lessonsData[currentLesson], ...data };
+            renderCurrentLesson();
+            alert("Đã cập nhật dữ liệu bài học thành công!");
+          } else {
+            alert("Định dạng JSON chưa chính xác.");
+          }
         } catch(err) {
-          alert("Lỗi đọc file JSON. Vui lòng kiểm tra lại cấu trúc file!");
+          alert("Lỗi đọc file JSON: " + err.message);
         }
       };
       reader.readAsText(file);
