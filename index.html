@@ -1,1 +1,815 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nihongo Master N5 - Học Tiếng Nhật 1-25</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
+    }
+    .sakura-bg {
+      background: linear-gradient(135deg, #fff5f7 0%, #f0f4ff 100%);
+    }
+  </style>
+</head>
+<body class="sakura-bg min-h-screen text-slate-800 flex flex-col">
 
+  <!-- Header / Navbar -->
+  <header class="bg-white/80 backdrop-blur-md border-b border-rose-100 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-rose-500 text-white p-2 rounded-xl shadow-md shadow-rose-200">
+          <i data-lucide="languages" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight text-slate-900">Nihongo N5 Master</h1>
+          <p class="text-xs text-rose-500 font-medium">Khám phá 25 Bài Minna no Nihongo</p>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl">
+        <button onclick="switchTab('vocab')" id="tab-vocab" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i data-lucide="book-open" class="w-4 h-4 inline mr-1"></i>Từ Vựng
+        </button>
+        <button onclick="switchTab('grammar')" id="tab-grammar" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i data-lucide="file-text" class="w-4 h-4 inline mr-1"></i>Ngữ Pháp
+        </button>
+        <button onclick="switchTab('cloze')" id="tab-cloze" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i data-lucide="pen-tool" class="w-4 h-4 inline mr-1"></i>Đục Lỗ
+        </button>
+        <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i data-lucide="brain-circuit" class="w-4 h-4 inline mr-1"></i>Luyện Quiz
+        </button>
+        <button onclick="switchTab('data')" id="tab-data" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i data-lucide="database" class="w-4 h-4 inline mr-1"></i>Quản Lý Data
+        </button>
+      </nav>
+
+      <!-- Lesson Selector -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">Bài:</span>
+        <select id="lessonSelect" onchange="changeLesson()" class="bg-rose-50 border border-rose-200 text-rose-900 font-bold rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400">
+          <!-- JS dynamic options -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Bar -->
+    <div class="flex md:hidden border-t border-slate-100 bg-white justify-around py-2">
+      <button onclick="switchTab('vocab')" id="mob-tab-vocab" class="text-xs flex flex-col items-center gap-1 font-medium text-slate-600">
+        <i data-lucide="book-open" class="w-5 h-5"></i>Từ Vựng
+      </button>
+      <button onclick="switchTab('grammar')" id="mob-tab-grammar" class="text-xs flex flex-col items-center gap-1 font-medium text-slate-600">
+        <i data-lucide="file-text" class="w-5 h-5"></i>Ngữ Pháp
+      </button>
+      <button onclick="switchTab('cloze')" id="mob-tab-cloze" class="text-xs flex flex-col items-center gap-1 font-medium text-slate-600">
+        <i data-lucide="pen-tool" class="w-5 h-5"></i>Đục Lỗ
+      </button>
+      <button onclick="switchTab('quiz')" id="mob-tab-quiz" class="text-xs flex flex-col items-center gap-1 font-medium text-slate-600">
+        <i data-lucide="brain-circuit" class="w-5 h-5"></i>Quiz
+      </button>
+      <button onclick="switchTab('data')" id="mob-tab-data" class="text-xs flex flex-col items-center gap-1 font-medium text-slate-600">
+        <i data-lucide="database" class="w-5 h-5"></i>Data
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
+
+    <!-- Title Banner -->
+    <div class="bg-gradient-to-r from-rose-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <span class="bg-white/20 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">Cấp độ JLPT N5</span>
+        <h2 id="currentLessonTitle" class="text-2xl sm:text-3xl font-extrabold mt-1">Bài 1: Giới thiệu bản thân</h2>
+      </div>
+      <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl">
+        <i data-lucide="trophy" class="w-6 h-6 text-amber-300"></i>
+        <div>
+          <div class="text-xs text-rose-100">Điểm Quiz Cao Nhất</div>
+          <div id="highScoreText" class="font-bold text-lg">0 điểm</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: TỪ VỰNG -->
+    <section id="view-vocab" class="tab-content hidden space-y-6">
+      <div class="flex justify-between items-center">
+        <h3 class="text-xl font-bold flex items-center gap-2">
+          <i data-lucide="book" class="text-rose-500"></i> Danh Sách Từ Vựng
+        </h3>
+        <button onclick="speakText('日本語')" class="text-xs text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-100">
+          <i data-lucide="volume-2" class="w-4 h-4 inline mr-1"></i>Thử Âm Thanh
+        </button>
+      </div>
+
+      <div id="vocabList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- JS injected Cards -->
+      </div>
+    </section>
+
+    <!-- TAB 2: NGỮ PHÁP -->
+    <section id="view-grammar" class="tab-content hidden space-y-6">
+      <h3 class="text-xl font-bold flex items-center gap-2">
+        <i data-lucide="sparkles" class="text-indigo-500"></i> Cấu Trúc Ngữ Pháp
+      </h3>
+      <div id="grammarList" class="space-y-4">
+        <!-- JS injected Grammar -->
+      </div>
+    </section>
+
+    <!-- TAB 3: ĐỤC LỖ (CLOZE TEST) -->
+    <section id="view-cloze" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold flex items-center gap-2">
+            <i data-lucide="pen-tool" class="text-emerald-500"></i> Luyện Điền Từ Vào Chỗ Trống
+          </h3>
+          <button onclick="checkClozeAnswers()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition">
+            <i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i>Kiểm Tra Kết Quả
+          </button>
+        </div>
+        <p class="text-sm text-slate-500 mb-6">Đọc câu và điền từ / trợ từ thích hợp vào ô trống bên dưới:</p>
+        
+        <div id="clozeList" class="space-y-6">
+          <!-- JS Cloze test items -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: QUIZ -->
+    <section id="view-quiz" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 max-w-2xl mx-auto">
+        
+        <!-- Start Screen -->
+        <div id="quizStartScreen" class="text-center py-8">
+          <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="brain" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Thách Thức Quiz N5</h3>
+          <p class="text-slate-600 text-sm mb-6">Trắc nghiệm tổng hợp Từ vựng & Ngữ pháp bài hiện tại</p>
+          <button onclick="startQuiz()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-rose-200 transition">
+            Bắt Đầu Làm Bài
+          </button>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quizContainer" class="hidden">
+          <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <span id="quizProgress" class="text-sm font-semibold text-slate-400">Câu 1/5</span>
+            <span id="quizScore" class="text-sm font-bold text-rose-500">Điểm: 0</span>
+          </div>
+
+          <div id="quizQuestionBox" class="mb-6">
+            <h4 id="quizQuestion" class="text-lg font-bold mb-4">Câu hỏi...</h4>
+            <div id="quizOptions" class="grid grid-cols-1 gap-3">
+              <!-- Options -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Result Screen -->
+        <div id="quizResultScreen" class="hidden text-center py-8">
+          <i data-lucide="award" class="w-16 h-16 text-amber-400 mx-auto mb-4"></i>
+          <h3 class="text-2xl font-bold mb-2">Hoàn Thành Quiz!</h3>
+          <p id="finalScoreText" class="text-xl font-extrabold text-indigo-600 mb-6">Bạn đạt được: 0/0 câu</p>
+          <button onclick="startQuiz()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition">
+            Thử Lại Bài Quiz
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 5: DATA MANAGEMENT -->
+    <section id="view-data" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <i data-lucide="upload-cloud" class="text-indigo-600"></i> Cập Nhật Dữ Liệu Học Bổ Sung
+        </h3>
+        <p class="text-sm text-slate-600 mb-6">Tải lên file định dạng JSON hoặc CSV để mở rộng/cập nhật danh sách bài học trên trình duyệt của bạn.</p>
+
+        <div class="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center bg-slate-50 hover:bg-slate-100 transition cursor-pointer" onclick="document.getElementById('fileInput').click()">
+          <i data-lucide="file-up" class="w-10 h-10 text-slate-400 mx-auto mb-3"></i>
+          <p class="font-semibold text-slate-700">Nhấn vào đây để tải file (.json / .csv)</p>
+          <p class="text-xs text-slate-400 mt-1">Hỗ trợ các bài mở rộng tùy chỉnh</p>
+          <input type="file" id="fileInput" accept=".json,.csv" class="hidden" onchange="handleFileUpload(event)">
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-100 py-6 mt-12 text-center text-xs text-slate-400">
+    <p>© 2026 Nihongo N5 Master. Mọi quyền được bảo lưu.</p>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC & COMPLETE N5 DATA -->
+  <script>
+    // FULL 1-25 LESSONS DATASET
+    const lessonsData = {
+      1: {
+        title: "Bài 1: Giới thiệu bản thân & Nghề nghiệp",
+        vocabulary: [
+          { word: "わたし", kanji: "私", romaji: "watashi", meaning: "Tôi", example: "わたしは アイン です。" },
+          { word: "あなた", kanji: "貴方", romaji: "anata", meaning: "Bạn / Anh / Chị", example: "あなたは がくせいですか。" },
+          { word: "あのひと", kanji: "あの人", romaji: "anohito", meaning: "Người đó", example: "あのひとは だれですか。" },
+          { word: "せんせい", kanji: "先生", romaji: "sensei", meaning: "Thầy / Cô giáo", example: "わたしは せんせいじゃありません。" },
+          { word: "がくせい", kanji: "学生", romaji: "gakusei", meaning: "Học sinh / Sinh viên", example: "ナムさんは がくせいです。" },
+          { word: "かいしゃいん", kanji: "会社員", romaji: "kaishain", meaning: "Nhân viên công ty", example: "マイクさんは かいしゃいんです。" },
+          { word: "ぎんこういん", kanji: "銀行員", romaji: "ginkouin", meaning: "Nhân viên ngân hàng", example: "あのひとは ぎんこういんです。" },
+          { word: "いしゃ", "kanji": "医者", romaji: "isha", meaning: "Bác sĩ", example: "父は いしゃです。" }
+        ],
+        grammar: [
+          { title: "1. N1 は N2 です (N1 là N2)", detail: "Dùng để giới thiệu tên, nghề nghiệp, quốc tịch.\n- 例: わたしは がくせいです。(Tôi là học sinh)." },
+          { title: "2. N1 は N2 じゃありません (N1 không phải là N2)", detail: "Phủ định của です trong văn nói.\n- 例: サントスさんは ぎんこういんじゃありません。" },
+          { title: "3. Câu hỏi N1 は N2 ですか (N1 có phải N2 không?)", detail: "Câu hỏi Yes/No trong tiếng Nhật.\n- Trả lời: はい、N2です / いいえ、N2じゃありません。" }
+        ],
+        cloze: [
+          { text: "わたし [hole] がくせい です。", answer: "は", hint: "Trợ từ chỉ chủ ngữ" },
+          { text: "ミラーさん [hole] かいしゃいんですか。", answer: "は", hint: "Trợ từ chỉ chủ ngữ" },
+          { text: "いいえ、わたしは いしゃ [hole] ありません。", answer: "じゃ", hint: "Từ phủ định đi với ありません" }
+        ]
+      },
+      2: {
+        title: "Bài 2: Đồ vật xung quanh (これ, それ, あれ)",
+        vocabulary: [
+          { word: "これ", kanji: "これ", romaji: "kore", meaning: "Cái này (gần người nói)", example: "これは ほんです。" },
+          { word: "それ", kanji: "それ", romaji: "sore", meaning: "Cái đó (gần người nghe)", example: "それは かばんです。" },
+          { word: "あれ", kanji: "あれ", romaji: "are", meaning: "Cái kia (xa cả 2)", example: "あれは くるまです。" },
+          { word: "ほん", kanji: "本", romaji: "hon", meaning: "Sách", example: "にほんごの ほんです。" },
+          { word: "じしょ", kanji: "辞書", romaji: "jisho", meaning: "Từ điển", example: "これは じしょです。" },
+          { word: "かさ", kanji: "傘", romaji: "kasa", meaning: "Dù / Ô", example: "あれは わたしのかさです。" }
+        ],
+        grammar: [
+          { title: "1. これ / それ / あれ は N です", title: "Chỉ định từ làm chủ ngữ cho đồ vật dựa theo vị trí khoảng cách." },
+          { title: "2. この N / その N / あの N", detail: "Chỉ định từ đi kèm danh từ trực tiếp.\n- 例: このほんは わたしのです (Sách này là của tôi)." }
+        ],
+        cloze: [
+          { text: "これ [hole] にほんごの ほんです。", answer: "は", hint: "Trợ từ chỉ chủ đề" },
+          { text: "それは [hole] の かばんですか。", answer: "だれ", hint: "Từ hỏi sở hữu (Của ai)" }
+        ]
+      },
+      3: {
+        title: "Bài 3: Vị trí & Địa điểm (ここ, そこ, あそこ)",
+        vocabulary: [
+          { word: "ここ", kanji: "ここ", romaji: "koko", meaning: "Chỗ này", example: "ここは きょうしつです。" },
+          { word: "そこ", kanji: "そこ", romaji: "soko", meaning: "Chỗ đó", example: "そこは うけつけです。" },
+          { word: "あそこ", kanji: "あそこ", romaji: "asoko", meaning: "Chỗ kia", example: "あそこは じむしょです。" },
+          { word: "どこ", kanji: "どこ", romaji: "doko", meaning: "Ở đâu", example: "お手洗いは どこですか。" }
+        ],
+        grammar: [
+          { title: "1. N は Địa-điểm です", detail: "Hỏi hoặc nói về vị trí của ai đó hoặc đồ vật nào đó." }
+        ],
+        cloze: [
+          { text: "じむしょ [hole] あそこです。", answer: "は", hint: "Trợ từ đứng sau chủ ngữ" }
+        ]
+      },
+      4: {
+        title: "Bài 4: Thời gian & Động từ Thì Hiện tại/Quá khứ",
+        vocabulary: [
+          { word: "いま", kanji: "今", romaji: "ima", meaning: "Bây giờ", example: "いま なんじですか。" },
+          { word: "おきます", kanji: "起きる", romaji: "okimasu", meaning: "Thức dậy", example: "6じに おきます。" },
+          { word: "ねます", kanji: "寝る", romaji: "nemasu", meaning: "Đi ngủ", example: "11じに ねます。" }
+        ],
+        grammar: [
+          { title: "1. Thời gian + に + Động từ", detail: "Chỉ mốc thời gian diễn ra hành động." }
+        ],
+        cloze: [
+          { text: "わたしは まいあさ 6じ [hole] おきます。", answer: "に", hint: "Trợ từ mốc thời gian" }
+        ]
+      },
+      5: {
+        title: "Bài 5: Di chuyển (いきます, きます, かえります) & Phương tiện",
+        vocabulary: [
+          { word: "いきます", kanji: "行きます", romaji: "ikimasu", meaning: "Đi", example: "スーパーへ いきます。" },
+          { word: "きます", kanji: "来ます", romaji: "kimasu", meaning: "Đến", example: "日本へ きました。" },
+          { word: "かえります", kanji: "帰ります", romaji: "kaerimasu", meaning: "Về", example: "うちへ かえります。" }
+        ],
+        grammar: [
+          { title: "1. Địa điểm + へ + いきます/きます/かえります", detail: "Chỉ hướng di chuyển." }
+        ],
+        cloze: [
+          { text: "わたしは でんしゃ [hole] かいしゃへ いきます。", answer: "で", hint: "Trợ từ phương tiện" }
+        ]
+      },
+      6: {
+        title: "Bài 6: Tân ngữ (Trợ từ を) & Lời mời (～ましょう)",
+        vocabulary: [
+          { word: "たべます", kanji: "食べます", romaji: "tabemasu", meaning: "Ăn", example: "ごはんを たべます。" },
+          { word: "のみます", kanji: "飲みます", romaji: "nomimasu", meaning: "Uống", example: "みずを のみます。" }
+        ],
+        grammar: [
+          { title: "1. N + を + Động từ", detail: "Chỉ tân ngữ chịu tác động." }
+        ],
+        cloze: [
+          { text: "コーヒー [hole] のみますか。", answer: "を", hint: "Trợ từ chỉ tân ngữ" }
+        ]
+      },
+      7: {
+        title: "Bài 7: Công cụ ( Trợ từ で) & Cho / Nhận",
+        vocabulary: [
+          { word: "きります", kanji: "切ります", romaji: "kirimasu", meaning: "Cắt", example: "はさみで きります。" },
+          { word: "あげます", kanji: "あげます", romaji: "agemasu", meaning: "Cho / Tặng", example: "友達に あげます。" }
+        ],
+        grammar: [
+          { title: "1. Công cụ + で + Động từ", detail: "Thực hiện bằng công cụ gì." }
+        ],
+        cloze: [
+          { text: "スプーン [hole] たべます。", answer: "で", hint: "Trợ từ công cụ" }
+        ]
+      },
+      8: {
+        title: "Bài 8: Tính từ đuôi な và Tính từ đuôi い",
+        vocabulary: [
+          { word: "ハンサム[な]", kanji: "-", romaji: "hansamu", meaning: "Đẹp trai", example: "あのひとは ハンサムです。" },
+          { word: "おおきい", kanji: "大きい", romaji: "ookii", meaning: "To / Lớn", example: "おおきい いえです。" }
+        ],
+        grammar: [
+          { title: "1. Bổ nghĩa danh từ bằng tính từ i / na", detail: "Chỉ đặc tính đồ vật." }
+        ],
+        cloze: [
+          { text: "富士山は [hole] い やまです。", answer: "たか", hint: "Từ: Cao (たかい)" }
+        ]
+      },
+      9: {
+        title: "Bài 9: Sở thích & Năng lực (すきです, じょうずです)",
+        vocabulary: [
+          { word: "すき[な]", kanji: "好き", romaji: "suki", meaning: "Thích", example: "スポーツが すきです。" },
+          { word: "わかります", kanji: "分かります", romaji: "wakarimasu", meaning: "Hiểu", example: "日本語が わかります。" }
+        ],
+        grammar: [
+          { title: "1. N が すきです / わかります", detail: "Đối tượng đi với が." }
+        ],
+        cloze: [
+          { text: "わたしは にほんご [hole] すきです。", answer: "が", hint: "Trợ từ chỉ đối tượng" }
+        ]
+      },
+      10: {
+        title: "Bài 10: Tồn tại Đồ vật & Người (あります / います)",
+        vocabulary: [
+          { word: "あります", kanji: "-", romaji: "arimasu", meaning: "Có (Đồ vật)", example: "本が あります。" },
+          { word: "います", kanji: "-", romaji: "imasu", meaning: "Có (Người, động vật)", example: "いぬが います。" }
+        ],
+        grammar: [
+          { title: "1. Địa điểm に N が あります/います", detail: "Sự tồn tại ở địa điểm." }
+        ],
+        cloze: [
+          { text: "部屋に ねこ [hole] います。", answer: "が", hint: "Trợ từ tồn tại" }
+        ]
+      },
+      11: {
+        title: "Bài 11: Số đếm & Lượng từ",
+        vocabulary: [
+          { word: "ひとつ", kanji: "一つ", romaji: "hitotsu", meaning: "1 cái", example: "ひとつ ください。" },
+          { word: "ふたつ", kanji: "二つ", romaji: "futatsu", meaning: "2 cái", example: "ふたつ かいました。" }
+        ],
+        grammar: [
+          { title: "1. Vị trí lượng từ", detail: "Đứng ngay trước Động từ." }
+        ],
+        cloze: [
+          { text: "みかんを [hole] つ ください。", answer: "ひと", hint: "Số 1 cái" }
+        ]
+      },
+      12: {
+        title: "Bài 12: So sánh (Tính từ Quá khứ & So sánh hơn)",
+        vocabulary: [
+          { word: "かんたん[な]", kanji: "簡単", romaji: "kantan", meaning: "Đơn giản", example: "かんたんな テスト。" }
+        ],
+        grammar: [
+          { title: "1. N1 は N2 より Adj です", detail: "N1 hơn N2." }
+        ],
+        cloze: [
+          { text: "きょうは きのう [hole] あついです。", answer: "より", hint: "Từ so sánh hơn" }
+        ]
+      },
+      13: {
+        title: "Bài 13: Mong muốn (～たいです / ～が ほしいです)",
+        vocabulary: [
+          { word: "ほしい", kanji: "欲しい", romaji: "hoshii", meaning: "Muốn có (Danh từ)", example: "車が ほしいです。" }
+        ],
+        grammar: [
+          { title: "1. V-bỏ-ます + たいです", detail: "Muốn thực hiện hành động." }
+        ],
+        cloze: [
+          { text: "みずを のみ [hole] です。", answer: "たい", "hint": "Đuôi thể hiện mong muốn" }
+        ]
+      },
+      14: {
+        title: "Bài 14: Thể Te (て) & Sai khiến nhẹ (～てください)",
+        vocabulary: [
+          { word: "つけます", kanji: "点けます", romaji: "tsukemasu", meaning: "Bật", example: "でんきを つけます。" }
+        ],
+        grammar: [
+          { title: "1. V-て ください", detail: "Hãy làm..." }
+        ],
+        cloze: [
+          { text: "本を よん [hole] ください。", answer: "で", hint: "Thể Te của yomimasu" }
+        ]
+      },
+      15: {
+        title: "Bài 15: Cho phép (～てもいいです) & Cấm đoán",
+        vocabulary: [
+          { word: "おきます", kanji: "置きます", romaji: "okimasu", meaning: "Đặt / Để", example: "ここに おきます。" }
+        ],
+        grammar: [
+          { title: "1. V-ても いいです", detail: "Được phép làm V." }
+        ],
+        cloze: [
+          { text: "ここで たばこを すっ [hole] は いけません。", answer: "て", hint: "Thể Te cấm đoán" }
+        ]
+      },
+      16: {
+        title: "Bài 16: Nối chuỗi hành động (V1-て, V2-て, V3-ます)",
+        vocabulary: [
+          { word: "のります", kanji: "乗ります", romaji: "norimasu", meaning: "Lên xe/tàu", example: "電車に のります。" }
+        ],
+        grammar: [
+          { title: "1. V1-て, V2-て, V3ます", detail: "Chuỗi hành động liên tiếp." }
+        ],
+        cloze: [
+          { text: "朝 おきて、ごはんを たべ [hole]、学校へ いきます。", answer: "て", hint: "Nối hành động" }
+        ]
+      },
+      17: {
+        title: "Bài 17: Thể Nai (ない) - Khuyên không làm gì (～ないでください)",
+        vocabulary: [
+          { word: "おぼえます", kanji: "覚えます", romaji: "oboemasu", meaning: "Ghi nhớ", example: "漢字を おぼえます。" }
+        ],
+        grammar: [
+          { title: "1. V-ないで ください", detail: "Xin đừng..." }
+        ],
+        cloze: [
+          { text: "心配し [hole] で ください。", answer: "ない", hint: "Thể Nai của します" }
+        ]
+      },
+      18: {
+        title: "Bài 18: Thể Nguyên dạng (じしょ形) & Khả năng",
+        vocabulary: [
+          { word: "できます", kanji: "-", romaji: "dekimasu", meaning: "Có thể", example: "日本語が できます。" }
+        ],
+        grammar: [
+          { title: "1. V-辞書形 + ことが できます", detail: "Có thể làm gì đó." }
+        ],
+        cloze: [
+          { text: "漢字を よむ こと [hole] できます。", answer: "が", hint: "Trợ từ khả năng" }
+        ]
+      },
+      19: {
+        title: "Bài 19: Thể Ta (た) - Trải nghiệm (～たことがあります)",
+        vocabulary: [
+          { word: "のぼります", kanji: "登ります", romaji: "noborimasu", meaning: "Leo núi", example: "山に のぼります。" }
+        ],
+        grammar: [
+          { title: "1. V-た ことが あります", detail: "Đã từng..." }
+        ],
+        cloze: [
+          { text: "すしを たべ [hole] ことが あります。", answer: "た", hint: "Thể Ta quá khứ" }
+        ]
+      },
+      20: {
+        title: "Bài 20: Thể Thông thường (普通形 - Plain Form)",
+        vocabulary: [
+          { word: "いります", kanji: "要ります", romaji: "irimasu", meaning: "Cần", example: "ビザが いります。" }
+        ],
+        grammar: [
+          { title: "1. Thể thông thường (Plain Form)", detail: "Giao tiếp thân mật." }
+        ],
+        cloze: [
+          { text: "明日 どこへ いく [hole]？", answer: "の", hint: "Trợ từ hỏi thân mật" }
+        ]
+      },
+      21: {
+        title: "Bài 21: Bày tỏ ý kiến (～と おもいます)",
+        vocabulary: [
+          { word: "おもいます", kanji: "思います", romaji: "omoimasu", meaning: "Nghĩ rằng", example: "そう おもいます。" }
+        ],
+        grammar: [
+          { title: "1. Thể thông thường + と おもいます", detail: "Tôi nghĩ là..." }
+        ],
+        cloze: [
+          { text: "明日 雨が ふる [hole] おもいます。", answer: "と", hint: "Trợ từ trích dẫn" }
+        ]
+      },
+      22: {
+        title: "Bài 22: Định ngữ bổ nghĩa cho Danh từ",
+        vocabulary: [
+          { word: "きます", kanji: "着ます", romaji: "kimasu", meaning: "Mặc áo", example: "シャツを きます。" }
+        ],
+        grammar: [
+          { title: "1. Mệnh đề + Danh từ", detail: "Mô tả bổ nghĩa danh từ." }
+        ],
+        cloze: [
+          { text: "わたしが きのう [hole] ほん。", answer: "かった", hint: "Chia thể Ta của kaimasu" }
+        ]
+      },
+      23: {
+        title: "Bài 23: Khi... (～とき) & Hễ mà... (～と)",
+        vocabulary: [
+          { word: "ききます", kanji: "聞きます", romaji: "kikimasu", meaning: "Hỏi", example: "先生に ききます。" }
+        ],
+        grammar: [
+          { title: "1. V-とき", detail: "Khi..." }
+        ],
+        cloze: [
+          { text: "図書館で 本を かりる [hole]、カードが いります。", answer: "とき", hint: "Từ nghĩa 'Khi'" }
+        ]
+      },
+      24: {
+        title: "Bài 24: Cho và Nhận hành động (くれたり/もらったり)",
+        vocabulary: [
+          { word: "くれます", kanji: "-", romaji: "kuremasu", meaning: "Cho tôi", example: "花を くれました。" }
+        ],
+        grammar: [
+          { title: "1. N1 は わたしに N2 を くれます", detail: "Ai cho tôi cái gì." }
+        ],
+        cloze: [
+          { text: "ヤマダさんは わたしに 花を [hole] ました。", answer: "くれ", hint: "Động từ kuremasu" }
+        ]
+      },
+      25: {
+        title: "Bài 25: Điều kiện (～たら) & Dù cho... (～ても)",
+        vocabulary: [
+          { word: "かんがえます", kanji: "考えます", romaji: "kangaemasu", meaning: "Suy nghĩ", example: "よく かんがえます。" }
+        ],
+        grammar: [
+          { title: "1. V-たら", detail: "Nếu..." }
+        ],
+        cloze: [
+          { text: "雨が ふっ [hole]、出かけません。", answer: "たら", hint: "Đuôi điều kiện Nếu" }
+        ]
+      }
+    };
+
+    // State Variables
+    let currentLesson = 1;
+    let currentTab = 'vocab';
+    let quizQuestions = [];
+    let currentQuizIndex = 0;
+    let score = 0;
+
+    // Initialize App
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      populateLessonSelect();
+      loadHighScore();
+      renderCurrentLesson();
+      switchTab('vocab');
+    });
+
+    // Populate dropdown with 25 lessons
+    function populateLessonSelect() {
+      const select = document.getElementById('lessonSelect');
+      select.innerHTML = '';
+      for (let i = 1; i <= 25; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `Bài ${i}`;
+        select.appendChild(opt);
+      }
+    }
+
+    function changeLesson() {
+      const select = document.getElementById('lessonSelect');
+      currentLesson = parseInt(select.value);
+      renderCurrentLesson();
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+      // Update button styling
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'text-rose-600', 'shadow-sm');
+        btn.classList.add('text-slate-600');
+      });
+      const activeBtn = document.getElementById(`tab-${tabId}`);
+      if(activeBtn) {
+        activeBtn.classList.add('bg-white', 'text-rose-600', 'shadow-sm');
+      }
+    }
+
+    function renderCurrentLesson() {
+      const lesson = lessonsData[currentLesson] || { title: `Bài ${currentLesson}`, vocabulary: [], grammar: [], cloze: [] };
+      document.getElementById('currentLessonTitle').textContent = lesson.title;
+
+      // Render Vocab
+      const vocabList = document.getElementById('vocabList');
+      vocabList.innerHTML = '';
+      if(lesson.vocabulary.length === 0) {
+        vocabList.innerHTML = `<p class="text-slate-400 italic col-span-full">Chưa có dữ liệu từ vựng cho bài này.</p>`;
+      } else {
+        lesson.vocabulary.forEach(v => {
+          const card = document.createElement('div');
+          card.className = "bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition flex flex-col justify-between";
+          card.innerHTML = `
+            <div>
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-2xl font-bold text-slate-900">${v.word}</span>
+                <span class="text-sm font-semibold text-rose-500 bg-rose-50 px-2.5 py-1 rounded-lg">${v.kanji || ''}</span>
+              </div>
+              <div class="text-xs text-slate-400 mb-2 font-mono">${v.romaji}</div>
+              <div class="text-base font-medium text-slate-700 mb-3">${v.meaning}</div>
+            </div>
+            <div class="pt-3 border-t border-slate-50 flex justify-between items-center text-xs text-slate-500">
+              <span class="italic truncate max-w-[200px]">"${v.example || ''}"</span>
+              <button onclick="speakText('${v.word}')" class="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg">
+                <i data-lucide="volume-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          `;
+          vocabList.appendChild(card);
+        });
+      }
+
+      // Render Grammar
+      const grammarList = document.getElementById('grammarList');
+      grammarList.innerHTML = '';
+      if(lesson.grammar.length === 0) {
+        grammarList.innerHTML = `<p class="text-slate-400 italic">Chưa có cấu trúc ngữ pháp cho bài này.</p>`;
+      } else {
+        lesson.grammar.forEach(g => {
+          const card = document.createElement('div');
+          card.className = "bg-white p-6 rounded-2xl border border-slate-100 shadow-sm";
+          card.innerHTML = `
+            <h4 class="text-lg font-bold text-indigo-900 mb-2">${g.title}</h4>
+            <p class="text-slate-600 text-sm whitespace-pre-line leading-relaxed">${g.detail}</p>
+          `;
+          grammarList.appendChild(card);
+        });
+      }
+
+      // Render Cloze
+      const clozeList = document.getElementById('clozeList');
+      clozeList.innerHTML = '';
+      if(lesson.cloze.length === 0) {
+        clozeList.innerHTML = `<p class="text-slate-400 italic">Chưa có bài tập đục lỗ cho bài này.</p>`;
+      } else {
+        lesson.cloze.forEach((c, idx) => {
+          const parts = c.text.split('[hole]');
+          const item = document.createElement('div');
+          item.className = "p-4 bg-slate-50 rounded-xl border border-slate-200";
+          item.innerHTML = `
+            <div class="text-base text-slate-800 font-medium mb-2">
+              ${idx + 1}. ${parts[0]} 
+              <input type="text" data-answer="${c.answer}" id="cloze-input-${idx}" class="mx-1 border-2 border-indigo-200 focus:border-indigo-500 rounded-lg px-2 py-1 text-center font-bold text-indigo-700 w-24 focus:outline-none">
+              ${parts[1] || ''}
+            </div>
+            <div class="text-xs text-slate-400">Gợi ý: ${c.hint || 'Điền từ còn thiếu'}</div>
+            <div id="cloze-feedback-${idx}" class="text-xs font-bold mt-1 hidden"></div>
+          `;
+          clozeList.appendChild(item);
+        });
+      }
+
+      lucide.createIcons();
+    }
+
+    // Speech synthesis
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ja-JP';
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // Check Cloze Test
+    function checkClozeAnswers() {
+      const lesson = lessonsData[currentLesson];
+      if(!lesson || !lesson.cloze) return;
+
+      lesson.cloze.forEach((c, idx) => {
+        const input = document.getElementById(`cloze-input-${idx}`);
+        const feedback = document.getElementById(`cloze-feedback-${idx}`);
+        if(input && feedback) {
+          const userVal = input.value.trim().toLowerCase();
+          const correctVal = c.answer.trim().toLowerCase();
+          if(userVal === correctVal) {
+            feedback.textContent = "✓ Chính xác!";
+            feedback.className = "text-xs font-bold mt-1 text-emerald-600";
+          } else {
+            feedback.textContent = `✕ Chưa đúng (Đáp án: ${c.answer})`;
+            feedback.className = "text-xs font-bold mt-1 text-rose-500";
+          }
+          feedback.classList.remove('hidden');
+        }
+      });
+    }
+
+    // Quiz Mode Logic
+    function startQuiz() {
+      const lesson = lessonsData[currentLesson];
+      if(!lesson || (lesson.vocabulary.length === 0 && lesson.cloze.length === 0)) {
+        alert("Bài này chưa có đủ dữ liệu để tạo Quiz!");
+        return;
+      }
+
+      // Generate Questions from Vocab
+      quizQuestions = [];
+      lesson.vocabulary.forEach(v => {
+        quizQuestions.push({
+          q: `Từ "${v.word}" (${v.kanji || ''}) có nghĩa là gì?`,
+          a: v.meaning,
+          options: shuffleArray([v.meaning, "Sách", "Bác sĩ", "Học sinh", "Trường học"].slice(0,4))
+        });
+      });
+
+      quizQuestions = shuffleArray(quizQuestions).slice(0, 5);
+      currentQuizIndex = 0;
+      score = 0;
+
+      document.getElementById('quizStartScreen').classList.add('hidden');
+      document.getElementById('quizResultScreen').classList.add('hidden');
+      document.getElementById('quizContainer').classList.remove('hidden');
+
+      showQuizQuestion();
+    }
+
+    function showQuizQuestion() {
+      if(currentQuizIndex >= quizQuestions.length) {
+        endQuiz();
+        return;
+      }
+
+      const q = quizQuestions[currentQuizIndex];
+      document.getElementById('quizProgress').textContent = `Câu ${currentQuizIndex + 1}/${quizQuestions.length}`;
+      document.getElementById('quizScore').textContent = `Điểm: ${score}`;
+      document.getElementById('quizQuestion').textContent = q.q;
+
+      const optsBox = document.getElementById('quizOptions');
+      optsBox.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:border-rose-400 hover:bg-rose-50/50 font-medium text-slate-700 transition";
+        btn.textContent = opt;
+        btn.onclick = () => handleQuizAnswer(opt, q.a);
+        optsBox.appendChild(btn);
+      });
+    }
+
+    function handleQuizAnswer(selected, correct) {
+      if(selected === correct) {
+        score += 20;
+      }
+      currentQuizIndex++;
+      showQuizQuestion();
+    }
+
+    function endQuiz() {
+      document.getElementById('quizContainer').classList.add('hidden');
+      document.getElementById('quizResultScreen').classList.remove('hidden');
+      document.getElementById('finalScoreText').textContent = `Bạn đạt được: ${score} điểm`;
+
+      saveHighScore(score);
+    }
+
+    function saveHighScore(newScore) {
+      const currentHigh = localStorage.getItem(`highScore_N5_L${currentLesson}`) || 0;
+      if(newScore > parseInt(currentHigh)) {
+        localStorage.setItem(`highScore_N5_L${currentLesson}`, newScore);
+      }
+      loadHighScore();
+    }
+
+    function loadHighScore() {
+      const high = localStorage.getItem(`highScore_N5_L${currentLesson}`) || 0;
+      document.getElementById('highScoreText').textContent = `${high} điểm`;
+    }
+
+    function shuffleArray(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    // Handle JSON Data Upload
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          Object.assign(lessonsData, data);
+          alert("Cập nhật dữ liệu thành công!");
+          renderCurrentLesson();
+        } catch(err) {
+          alert("Lỗi đọc file JSON. Vui lòng kiểm tra lại cấu trúc file!");
+        }
+      };
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+</html>
