@@ -1,0 +1,166 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f4f7f6;
+  color: #333;
+}
+
+header {
+  background-color: #2c3e50;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-container {
+  display: flex;
+  min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background: #fff;
+  border-right: 1px solid #ddd;
+  padding: 1rem;
+}
+
+.sidebar h3 {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  padding: 10px;
+  margin-bottom: 5px;
+  background: #eef2f5;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.sidebar li.active, .sidebar li:hover {
+  background: #3498db;
+  color: white;
+}
+
+/* Content Area */
+.content-area {
+  flex: 1;
+  padding: 2rem;
+}
+
+/* Auth Boxes */
+.auth-box {
+  max-width: 400px;
+  margin: 50px auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.auth-box h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn:hover {
+  background: #219150;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin: 1.5rem 0;
+  border-bottom: 2px solid #ddd;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+  border-color: #3498db;
+  color: #3498db;
+  font-weight: bold;
+}
+
+/* Content Tables & Cards */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f8f9fa;
+}
+
+.grammar-item, .kaiwa-box {
+  background: white;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #3498db;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.dialogue-line {
+  margin-bottom: 8px;
+}
+
+.dialogue-line .speaker {
+  font-weight: bold;
+  color: #e67e22;
+}
