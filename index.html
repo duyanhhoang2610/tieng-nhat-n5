@@ -1,627 +1,616 @@
 <!DOCTYPE html>
+
 <html lang="vi">
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Minna no Nihongo - Học Tiếng Nhật Sơ Cấp</title>
+
   <!-- Nhúng Font Google Font (Plus Jakarta Sans & Noto Sans JP) -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   
+
   <style>
+
     :root {
+
       --primary-color: #e60012; /* Màu đỏ Nhật Bản */
+
       --primary-hover: #c4000f;
+
       --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+
       --card-bg: #ffffff;
+
       --text-main: #2d3436;
+
       --text-muted: #636e72;
+
       --border-color: #e2e8f0;
+
       --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
       --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      --success-color: #2e7d32;
-      --error-color: #d32f2f;
+
     }
+
+
 
     * {
+
       box-sizing: border-box;
+
       margin: 0;
+
       padding: 0;
+
       font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
+
     }
+
+
 
     body {
+
       background: var(--bg-gradient);
+
       color: var(--text-main);
+
       min-height: 100vh;
+
       display: flex;
+
       flex-direction: column;
+
     }
+
+
 
     /* Header Navbar */
+
     header {
+
       background: rgba(255, 255, 255, 0.9);
+
       backdrop-filter: blur(10px);
+
       border-bottom: 1px solid var(--border-color);
+
       padding: 1rem 2rem;
+
       display: flex;
+
       justify-content: space-between;
+
       align-items: center;
+
       position: sticky;
+
       top: 0;
+
       z-index: 100;
+
     }
+
+
 
     .logo {
+
       display: flex;
+
       align-items: center;
+
       gap: 10px;
+
       font-weight: 700;
+
       font-size: 1.25rem;
+
       color: var(--text-main);
+
     }
+
+
 
     .logo-icon {
+
       width: 32px;
+
       height: 32px;
+
       background: var(--primary-color);
+
       color: white;
+
       border-radius: 50%;
+
       display: flex;
+
       align-items: center;
+
       justify-content: center;
+
       font-size: 1rem;
+
       font-weight: bold;
+
       box-shadow: 0 2px 8px rgba(230, 0, 18, 0.3);
+
     }
 
-    .user-status {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
+
 
     /* Layout chính */
+
     .main-container {
+
       flex: 1;
+
       display: flex;
+
       align-items: center;
+
       justify-content: center;
+
       padding: 2rem 1rem;
+
     }
 
-    /* Card Đăng nhập / Đăng ký / Quiz */
-    .auth-card, .quiz-card {
+
+
+    /* Card Đăng nhập / Đăng ký */
+
+    .auth-card {
+
       background: var(--card-bg);
+
       width: 100%;
-      max-width: 520px;
+
+      max-width: 420px;
+
       padding: 2.5rem 2rem;
+
       border-radius: 16px;
+
       box-shadow: var(--shadow-lg);
+
       border: 1px solid rgba(255, 255, 255, 0.8);
+
       position: relative;
+
       overflow: hidden;
+
     }
+
+
 
     /* Họa tiết trang trí nền Nhật Bản */
-    .auth-card::before, .quiz-card::before {
+
+    .auth-card::before {
+
       content: "🌸";
+
       position: absolute;
+
       top: -15px;
+
       right: -10px;
+
       font-size: 5rem;
+
       opacity: 0.08;
+
       pointer-events: none;
+
     }
 
-    .auth-header, .quiz-header {
+
+
+    .auth-header {
+
       text-align: center;
-      margin-bottom: 1.5rem;
+
+      margin-bottom: 2rem;
+
     }
 
-    .auth-header h2, .quiz-header h2 {
+
+
+    .auth-header h2 {
+
       font-size: 1.75rem;
+
       color: var(--text-main);
+
       font-weight: 700;
+
       letter-spacing: -0.5px;
+
     }
 
-    .auth-header p, .quiz-header p {
+
+
+    .auth-header p {
+
       color: var(--text-muted);
+
       font-size: 0.9rem;
+
       margin-top: 0.5rem;
+
     }
+
+
 
     /* Form Inputs */
+
     .form-group {
+
       margin-bottom: 1.25rem;
+
     }
+
+
 
     .form-group label {
+
       display: block;
+
       font-size: 0.875rem;
+
       font-weight: 600;
+
       margin-bottom: 0.5rem;
+
       color: var(--text-main);
+
     }
+
+
+
+    .input-wrapper {
+
+      position: relative;
+
+    }
+
+
 
     .form-group input {
+
       width: 100%;
+
       padding: 0.75rem 1rem;
+
       border: 1.5px solid var(--border-color);
+
       border-radius: 10px;
+
       font-size: 0.95rem;
+
       transition: all 0.2s ease;
+
       background: #fafafa;
+
       outline: none;
+
     }
+
+
 
     .form-group input:focus {
+
       background: #fff;
+
       border-color: var(--primary-color);
+
       box-shadow: 0 0 0 4px rgba(230, 0, 18, 0.1);
+
     }
 
-    /* Buttons */
+
+
+    /* Button */
+
     .btn-submit {
+
       width: 100%;
+
       padding: 0.85rem;
+
       background: var(--primary-color);
+
       color: white;
+
       border: none;
+
       border-radius: 10px;
+
       font-size: 1rem;
+
       font-weight: 600;
+
       cursor: pointer;
+
       transition: all 0.2s ease;
+
       box-shadow: 0 4px 12px rgba(230, 0, 18, 0.25);
+
       margin-top: 0.5rem;
+
     }
+
+
 
     .btn-submit:hover {
+
       background: var(--primary-hover);
+
       transform: translateY(-1px);
+
       box-shadow: 0 6px 16px rgba(230, 0, 18, 0.35);
+
     }
+
+
 
     .btn-submit:active {
+
       transform: translateY(0);
+
     }
+
+
 
     /* Auth Footer Links */
+
     .auth-footer {
+
       margin-top: 1.75rem;
+
       text-align: center;
+
       font-size: 0.9rem;
+
       color: var(--text-muted);
+
     }
+
+
 
     .auth-footer a {
+
       color: var(--primary-color);
+
       text-decoration: none;
+
       font-weight: 600;
+
       transition: color 0.2s;
+
     }
+
+
 
     .auth-footer a:hover {
+
       text-decoration: underline;
+
     }
+
+
 
     /* Thẻ thông báo gợi ý */
+
     .hint-box {
+
       background: #fff5f5;
+
       border: 1px dashed #feb2b2;
+
       padding: 0.75rem 1rem;
+
       border-radius: 8px;
+
       font-size: 0.85rem;
+
       color: #c53030;
+
       margin-bottom: 1.5rem;
+
       line-height: 1.4;
+
     }
 
-    /* UI Phần Quiz */
-    .quiz-progress {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 6px;
-      background: var(--border-color);
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--primary-color);
-      transition: width 0.3s ease;
-    }
-
-    .question-box {
-      margin-bottom: 1.5rem;
-    }
-
-    .question-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-
-    .question-sub {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .option-btn {
-      padding: 0.9rem 1rem;
-      border: 1.5px solid var(--border-color);
-      border-radius: 10px;
-      background: #fafafa;
-      text-align: left;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .option-btn:hover {
-      border-color: var(--primary-color);
-      background: #fff;
-    }
-
-    .option-btn.selected {
-      border-color: var(--primary-color);
-      background: #fff5f5;
-      color: var(--primary-color);
-      font-weight: 600;
-    }
-
-    .option-btn.correct {
-      border-color: var(--success-color);
-      background: #e8f5e9;
-      color: var(--success-color);
-      font-weight: 600;
-    }
-
-    .option-btn.wrong {
-      border-color: var(--error-color);
-      background: #ffebee;
-      color: var(--error-color);
-      font-weight: 600;
-    }
-
-    .result-score {
-      text-align: center;
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin: 1rem 0;
-    }
-
-    .btn-secondary {
-      background: #636e72;
-      box-shadow: none;
-    }
-
-    .btn-secondary:hover {
-      background: #2d3436;
-      box-shadow: none;
-    }
   </style>
+
 </head>
+
 <body>
 
+
+
   <!-- Header -->
+
   <header>
+
     <div class="logo">
+
       <div class="logo-icon">日</div>
+
       <span>Minna no Nihongo</span>
+
     </div>
-    <div id="userStatus" class="user-status"></div>
+
   </header>
 
+
+
   <!-- Container Chính -->
+
   <div class="main-container">
 
+
+
     <!-- Card Đăng Nhập -->
+
     <section id="loginSection" class="auth-card">
+
       <div class="auth-header">
+
         <h2>Đăng Nhập</h2>
+
         <p>Chào mừng bạn quay trở lại hành trình học tiếng Nhật!</p>
+
       </div>
+
+
 
       <div class="hint-box">
+
         💡 <b>Tài khoản dùng thử:</b><br>
+
         • Tên đăng nhập: <b>demo</b> | Mật khẩu: <b>123</b>
+
       </div>
 
-      <form id="loginForm" onsubmit="handleLogin(event)">
+
+
+      <form id="loginForm">
+
         <div class="form-group">
+
           <label for="loginUser">Tên đăng nhập</label>
+
           <input type="text" id="loginUser" placeholder="Nhập tên đăng nhập..." value="demo" required>
+
         </div>
+
+
 
         <div class="form-group">
+
           <label for="loginPass">Mật khẩu</label>
+
           <input type="password" id="loginPass" placeholder="Nhập mật khẩu..." value="123" required>
+
         </div>
 
-        <button type="submit" class="btn-submit">Đăng Nhập & Bắt Đầu Học</button>
+
+
+        <button type="submit" class="btn-submit">Đăng Nhập</button>
+
       </form>
 
+
+
       <div class="auth-footer">
+
         Chưa có tài khoản? <a href="#" onclick="switchForm('register')">Đăng ký ngay</a>
+
       </div>
+
     </section>
+
+
 
     <!-- Card Đăng Ký (Ẩn mặc định) -->
+
     <section id="registerSection" class="auth-card" style="display: none;">
+
       <div class="auth-header">
+
         <h2>Tạo Tài Khoản</h2>
+
         <p>Bắt đầu chinh phục N5 - N1 ngay hôm nay</p>
+
       </div>
 
-      <form id="registerForm" onsubmit="handleRegister(event)">
-        <div class="form-group">
-          <label for="regUser">Tên đăng nhập</label>
-          <input type="text" id="regUser" placeholder="Tạo tên đăng nhập..." required>
-        </div>
+
+
+      <form id="registerForm">
 
         <div class="form-group">
-          <label for="regPass">Mật khẩu</label>
-          <input type="password" id="regPass" placeholder="Tạo mật khẩu..." required>
+
+          <label for="regUser">Tên đăng nhập</label>
+
+          <input type="text" id="regUser" placeholder="Tạo tên đăng nhập..." required>
+
         </div>
+
+
+
+        <div class="form-group">
+
+          <label for="regPass">Mật khẩu</label>
+
+          <input type="password" id="regPass" placeholder="Tạo mật khẩu..." required>
+
+        </div>
+
+
 
         <button type="submit" class="btn-submit">Đăng Ký Tài Khoản</button>
+
       </form>
 
+
+
       <div class="auth-footer">
+
         Đã có tài khoản? <a href="#" onclick="switchForm('login')">Đăng nhập</a>
+
       </div>
+
     </section>
 
-    <!-- Card Luyện Tập / Quiz (Ẩn mặc định) -->
-    <section id="quizSection" class="quiz-card" style="display: none;">
-      <div class="quiz-progress">
-        <span id="questionCounter">Câu hỏi 1/5</span>
-        <span id="quizLessonTag">Minna Bài 1 - 2</span>
-      </div>
-      
-      <div class="progress-bar-bg">
-        <div id="progressBar" class="progress-bar-fill"></div>
-      </div>
 
-      <div class="question-box">
-        <div id="questionText" class="question-title">ぎんこういん là gì?</div>
-        <div id="questionSub" class="question-sub">Chọn đáp án đúng nhất</div>
-      </div>
-
-      <div id="optionsContainer" class="options-grid">
-        <!-- Các lựa chọn sẽ được render bằng JS -->
-      </div>
-
-      <button id="nextBtn" class="btn-submit" onclick="nextQuestion()" disabled>Chọn câu trả lời</button>
-    </section>
-
-    <!-- Card Kết Quả Quiz (Ẩn mặc định) -->
-    <section id="resultSection" class="quiz-card" style="display: none; text-align: center;">
-      <div class="quiz-header">
-        <h2>Hoàn Thành Bài Tập! 🎉</h2>
-        <p>Kết quả luyện tập Từ vựng Minna no Nihongo</p>
-      </div>
-
-      <div id="scoreDisplay" class="result-score">0 / 5</div>
-      <p id="resultFeedback" style="margin-bottom: 1.5rem; color: var(--text-muted);"></p>
-
-      <button class="btn-submit" onclick="restartQuiz()">Làm lại bài Quiz</button>
-      <button class="btn-submit btn-secondary" style="margin-top: 0.5rem;" onclick="logout()">Đăng xuất</button>
-    </section>
 
   </div>
 
+
+
   <script>
-    // Dữ liệu bộ câu hỏi Quiz (Minna no Nihongo Bài 1 & Bài 2)
-    const quizData = [
-      {
-        question: "ぎんこういん (Ginkouin) nghĩa là gì?",
-        options: ["Bác sĩ", "Nhân viên ngân hàng", "Học sinh", "Kỹ sư"],
-        answer: 1
-      },
-      {
-        question: "Từ nào sau đây có nghĩa là 'Sách'?",
-        options: ["ほん (Hon)", "じしょ (Jisho)", "ざっし (Zasshi)", "ノート (Nooto)"],
-        answer: 0
-      },
-      {
-        question: "いしゃ (Isha) trong tiếng Nhật là nghề gì?",
-        options: ["Giáo viên", "Nhân viên công ty", "Bác sĩ", "Nhà nghiên cứu"],
-        answer: 2
-      },
-      {
-        question: "Từ 'これ' (Kore) dùng để chỉ vật ở đâu?",
-        options: ["Gần người nói", "Gần người nghe", "Xa cả hai người", "Không rõ vị trí"],
-        answer: 0
-      },
-      {
-        question: "せんせい (Sensei) có nghĩa là gì?",
-        options: ["Học sinh", "Thầy / Cô giáo", "Nhân viên", "Bạn bè"],
-        answer: 1
-      }
-    ];
 
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let selectedOptionIndex = null;
-    let currentUser = null;
+    // Chuyển đổi qua lại giữa Form Đăng Nhập và Đăng Ký
 
-    // Chuyển đổi giữa Form Đăng Nhập và Đăng Ký
     function switchForm(type) {
+
       const loginSection = document.getElementById('loginSection');
+
       const registerSection = document.getElementById('registerSection');
 
+
+
       if (type === 'register') {
+
         loginSection.style.display = 'none';
+
         registerSection.style.display = 'block';
+
       } else {
+
         registerSection.style.display = 'none';
+
         loginSection.style.display = 'block';
+
       }
+
     }
 
-    // Xử lý đăng nhập
-    function handleLogin(event) {
-      event.preventDefault();
-      const userVal = document.getElementById('loginUser').value;
-      currentUser = userVal;
-      document.getElementById('userStatus').innerText = `👤 Xin chào, ${currentUser}`;
-
-      // Ẩn login, hiện Quiz
-      document.getElementById('loginSection').style.display = 'none';
-      document.getElementById('quizSection').style.display = 'block';
-      
-      startQuiz();
-    }
-
-    // Xử lý đăng ký
-    function handleRegister(event) {
-      event.preventDefault();
-      alert("Đăng ký thành công! Vui lòng đăng nhập.");
-      switchForm('login');
-    }
-
-    // Khởi tạo Quiz
-    function startQuiz() {
-      currentQuestionIndex = 0;
-      score = 0;
-      showQuestion();
-    }
-
-    // Hiển thị câu hỏi hiện tại
-    function showQuestion() {
-      selectedOptionIndex = null;
-      const currentQuiz = quizData[currentQuestionIndex];
-      const nextBtn = document.getElementById('nextBtn');
-
-      // Cập nhật Progress
-      document.getElementById('questionCounter').innerText = `Câu hỏi ${currentQuestionIndex + 1}/${quizData.length}`;
-      const progressPercent = ((currentQuestionIndex) / quizData.length) * 100;
-      document.getElementById('progressBar').style.width = `${progressPercent}%`;
-
-      // Cập nhật Nội dung câu hỏi
-      document.getElementById('questionText').innerText = currentQuiz.question;
-      
-      // Render các Lựa chọn
-      const optionsContainer = document.getElementById('optionsContainer');
-      optionsContainer.innerHTML = '';
-
-      currentQuiz.options.forEach((opt, index) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerText = `${String.fromCharCode(65 + index)}. ${opt}`;
-        btn.onclick = () => selectOption(index, btn);
-        optionsContainer.appendChild(btn);
-      });
-
-      nextBtn.innerText = "Xác nhận";
-      nextBtn.disabled = true;
-    }
-
-    // Chọn đáp án
-    function selectOption(index, btnElement) {
-      selectedOptionIndex = index;
-      const allBtns = document.querySelectorAll('.option-btn');
-      allBtns.forEach(b => b.classList.remove('selected'));
-      btnElement.classList.add('selected');
-
-      document.getElementById('nextBtn').disabled = false;
-    }
-
-    // Chuyển câu hỏi tiếp theo hoặc nộp bài
-    function nextQuestion() {
-      const currentQuiz = quizData[currentQuestionIndex];
-      const allBtns = document.querySelectorAll('.option-btn');
-
-      // Đã chọn câu trả lời nhưng chưa kiểm tra
-      if (!allBtns[0].disabled) {
-        // Khóa các nút lựa chọn
-        allBtns.forEach((btn, idx) => {
-          btn.disabled = true;
-          if (idx === currentQuiz.answer) {
-            btn.classList.add('correct');
-          } else if (idx === selectedOptionIndex) {
-            btn.classList.add('wrong');
-          }
-        });
-
-        if (selectedOptionIndex === currentQuiz.answer) {
-          score++;
-        }
-
-        const nextBtn = document.getElementById('nextBtn');
-        if (currentQuestionIndex < quizData.length - 1) {
-          nextBtn.innerText = "Câu tiếp theo ➔";
-        } else {
-          nextBtn.innerText = "Xem kết quả ➔";
-        }
-      } else {
-        // Chuyển sang câu kế tiếp
-        currentQuestionIndex++;
-        if (currentQuestionIndex < quizData.length) {
-          showQuestion();
-        } else {
-          showResult();
-        }
-      }
-    }
-
-    // Hiển thị màn hình kết quả
-    function showResult() {
-      document.getElementById('quizSection').style.display = 'none';
-      document.getElementById('resultSection').style.display = 'block';
-
-      document.getElementById('scoreDisplay').innerText = `${score} / ${quizData.length}`;
-      
-      const feedback = document.getElementById('resultFeedback');
-      if (score === quizData.length) {
-        feedback.innerText = "Tuyệt vời! Bạn đã thuộc toàn bộ từ vựng.";
-      } else if (score >= 3) {
-        feedback.innerText = "Khá tốt! Hãy ôn lại một vài từ còn sai nhé.";
-      } else {
-        feedback.innerText = "Cố gắng lên! Bạn cần ôn lại bài 1 & 2 kỹ hơn.";
-      }
-    }
-
-    // Làm lại Quiz
-    function restartQuiz() {
-      document.getElementById('resultSection').style.display = 'none';
-      document.getElementById('quizSection').style.display = 'block';
-      startQuiz();
-    }
-
-    // Đăng xuất
-    function logout() {
-      currentUser = null;
-      document.getElementById('userStatus').innerText = '';
-      document.getElementById('resultSection').style.display = 'none';
-      document.getElementById('loginSection').style.display = 'block';
-    }
   </script>
+
 </body>
-</html>
+
+</html> 
+
